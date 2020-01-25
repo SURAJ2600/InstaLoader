@@ -2,6 +2,7 @@ package com.suraj.instaloaderapp.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.suraj.instaloaderapp.BuildConfig
 import com.suraj.instaloaderapp.api.ApiInterface
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -40,7 +41,7 @@ fun provideOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpC
         .build()
 }
 fun provideRetrofit(okHttpClient: OkHttpClient, gson: Gson): Retrofit {
-    return Retrofit.Builder().baseUrl("https://pastebin.com/").client(okHttpClient)
+    return Retrofit.Builder().baseUrl(BuildConfig.SERVER_URL).client(okHttpClient)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .addConverterFactory(GsonConverterFactory.create(gson)).build()
 }
