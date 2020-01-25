@@ -23,7 +23,6 @@ class ExecutorSupplier/*
          */
 private constructor() {
     private val forBackgroundTasks: ThreadPoolExecutor
-    private val mainThreadExecutor: Executor
     private val forLightWeightBackgroundTasks: ThreadPoolExecutor
 
     init {
@@ -49,8 +48,6 @@ private constructor() {
             backgroundPriorityThreadFactory
         )
 
-        // setting the thread pool executor for mMainThreadExecutor;
-        mainThreadExecutor = MainThreadExecutor()
 
     }
 
@@ -65,9 +62,7 @@ private constructor() {
         return forBackgroundTasks
     }
 
-    fun forMainThreadTasks(): Executor {
-        return mainThreadExecutor
-    }
+
 
     companion object {
         /*

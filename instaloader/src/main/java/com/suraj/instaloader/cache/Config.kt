@@ -8,11 +8,6 @@ package com.suraj.instaloader.cache
 *
 * for the InstaLoader module.....
 * */
-
-
-
-
-
 class Config {
     companion object {
         val maxMemory = Runtime.getRuntime().maxMemory() /1024

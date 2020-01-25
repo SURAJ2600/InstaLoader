@@ -77,7 +77,7 @@ class InstaLoaderRepository(
         } ?: kotlin.run {
             var future = newFixedThreadPool.forBackgroundTasks().submit(DownloadResourceFromRemote(requestBuilder))
             hashMap.put(requestBuilder.url, future)
-            newFixedThreadPool.forBackgroundTasks().execute {
+            newFixedThreadPool.forLightWeightBackgroundTasks().execute {
                 getStreamBasedOnResponse(future.get(),requestBuilder)
             }
 
@@ -99,7 +99,7 @@ class InstaLoaderRepository(
         } ?: kotlin.run {
             var future=newFixedThreadPool.forBackgroundTasks().submit(DownloadResourceFromRemote(requestBuilder))
             hashMap.put(requestBuilder.url,future)
-            newFixedThreadPool.forBackgroundTasks().execute {
+            newFixedThreadPool.forLightWeightBackgroundTasks().execute {
                 getStreamBasedOnResponse(future.get(),requestBuilder)
             }
 
