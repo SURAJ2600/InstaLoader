@@ -21,7 +21,7 @@
         android:id="@+id/imgs"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:background="#404040"
+        android:background="#E2DED3"
         app:layout_constraintEnd_toEndOf="@+id/imag"
         app:layout_constraintStart_toStartOf="@+id/imag"
         app:layout_constraintTop_toBottomOf="@+id/imag"></ImageView>
