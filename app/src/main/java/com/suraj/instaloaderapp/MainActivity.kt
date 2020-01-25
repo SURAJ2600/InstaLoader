@@ -16,42 +16,35 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //InstaLoader.getInstance(this , CACHE_SIZE)
         InstaLoader.init(this)
-
-        InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
-        InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
-            .getJsonArrayResponse().observe(this, Observer {
-                when(it){
-                    is ResponseState.loading -> {
-                        Log.e("Response",">>>>>>>"+it)
-
-                    }
-                    is ResponseState.Error->{
-
-                    }
-                    is ResponseState.Success->{
-                        Log.e("Response",">>>>>>>"+it.jsonArray)
-
-
-                    }
-
-
-                }
-            })
+      InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
+//            .getJsonArrayResponse().observe(this, Observer {
+//                when(it){
+//                    is ResponseState.loading -> {
+//                        Log.e("Response",">>>>>>>"+it)
+//
+//                    }
+//                    is ResponseState.Error->{
+//
+//                    }
+//                    is ResponseState.Success->{
+//                        Log.e("Response",">>>>>>>"+it.jsonArray)
+//
+//
+//                    }
+//
+//
+//                }
+//            })
 
         InstaLoader.getInstance()
             .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
            .placeholder(R.mipmap.ic_launcher)
            .into(imag)
 
-        InstaLoader.getInstance()
-           .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
-            .placeholder(R.mipmap.ic_launcher)
-            .into(imag)
+      //  InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
 
-//        InstaLoader.with(this)
-//            .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
-//            .placeholder(R.mipmap.ic_launcher)
-//            .into(imag)
+
+
 //
 //        InstaLoader.with(this)
 //            .source("https://pastebin.com/raw/wgkJgazE")

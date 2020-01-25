@@ -3,6 +3,8 @@ package com.suraj.instaloader
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Handler
+import android.os.Looper
 import android.widget.ImageView
 import androidx.annotation.AnyRes
 import androidx.annotation.DrawableRes
@@ -37,7 +39,6 @@ import java.util.concurrent.Future
 * */
 
 class InstaLoader : CachEvict {
-
     companion object {
         private var contextWeakReference: WeakReference<Context>? = null
         private lateinit var fastloaderWeakReference: WeakReference<InstaLoader>
@@ -86,9 +87,7 @@ class InstaLoader : CachEvict {
     private var mPlaceHolderBitmap: Bitmap? = null
     private var mWidth = 0
     private var mHeight = 0
-
-
-
+    private val handler = Handler(Looper.getMainLooper())
 
 
     /*
@@ -263,12 +262,13 @@ class InstaLoader : CachEvict {
 
     private fun setBitmapHandler(imageView: ImageView) {
         repository.bitmapResponseHandler = { status, bitmap, message ->
-            bitmap?.let {
-                imageView.setImageBitmap(bitmap)
+            handler.post {
+                bitmap?.let {
+                    imageView.setImageBitmap(bitmap)
+                } ?: kotlin.run {
+                    setDefaultIcons(imageView)
 
-            } ?: kotlin.run {
-                setDefaultIcons(imageView)
-
+                }
             }
         }
     }

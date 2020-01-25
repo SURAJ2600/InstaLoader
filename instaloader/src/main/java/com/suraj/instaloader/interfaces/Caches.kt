@@ -19,9 +19,10 @@ interface Caches {
 
     interface CacheJson {
 
-        fun putJson(url: String, json: JSONObject)
+        fun putJson(url: String, json: String)
 
-        fun getJson(url: String): JSONObject?
+        fun getJson(url: String): String
+        ?
 
         fun clearJson()
     }

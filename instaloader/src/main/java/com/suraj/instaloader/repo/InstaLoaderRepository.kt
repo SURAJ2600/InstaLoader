@@ -1,7 +1,7 @@
 package com.suraj.instaloader.repo
 
 import android.graphics.Bitmap
-import com.suraj.instaloader.bacgroundTasks.DownloadBitmapFromRemote
+import com.suraj.instaloader.bacgroundTasks.DownloadResourceFromRemote
 import com.suraj.instaloader.cache.LRUCacheJson
 import com.suraj.instaloader.cache.MemoryCache
 import com.suraj.instaloader.core.ExecutorSupplier
@@ -13,10 +13,8 @@ import com.suraj.instaloader.utils.Utils
 import okhttp3.Response
 import okio.Okio
 import org.json.JSONArray
-import org.json.JSONObject
 import java.lang.Exception
 import java.util.HashMap
-import java.util.concurrent.ExecutorService
 import java.util.concurrent.Future
 
 
@@ -39,14 +37,16 @@ class InstaLoaderRepository(
     var jsonResponseHandler: (status:Boolean,json: JSONArray?,message:String?) -> Unit = {status,bitmap, message ->  }
 
 
-    override fun putJson(url: String, json: JSONObject) {
+    override fun putJson(url: String, json: String) {
+        lruCacheJson.put(url,json)
     }
 
-    override fun getJson(url: String): JSONObject? {
-        return null
+    override fun getJson(url: String): String? {
+        return lruCacheJson.get(url)
     }
 
     override fun clearJson() {
+       lruCacheJson.clearCache()
     }
 
 
@@ -59,39 +59,60 @@ class InstaLoaderRepository(
     }
 
     override fun evictAllBitmap() {
-        memoryCache.evictAllBitmap()
+       memoryCache.evictAllBitmap()
     }
 
+
+    /*
+    * Load image from cache or network
+    *@param requestBuilder
+    *
+    * */
+
     fun loadImage(requestBuilder: InstaLoaderRequestBuilder) {
-        var bitmap = memoryCache.getImage(requestBuilder.url)
+        var bitmap = getImage(requestBuilder.url)
         bitmap?.let {
             bitmapResponseHandler(true,bitmap,null)
             return
         } ?: kotlin.run {
-            var future = newFixedThreadPool.forBackgroundTasks().submit(DownloadBitmapFromRemote(requestBuilder))
+            var future = newFixedThreadPool.forBackgroundTasks().submit(DownloadResourceFromRemote(requestBuilder))
             hashMap.put(requestBuilder.url, future)
-            newFixedThreadPool.forMainThreadTasks().execute { getStreamBasedOnResponse(future.get(),requestBuilder)}
+            newFixedThreadPool.forBackgroundTasks().execute {
+                getStreamBasedOnResponse(future.get(),requestBuilder)
+            }
 
         }
     }
 
 
+
+
+    /*
+    *
+    * Load json from network or memory cache
+    * @param InstaLoaderRequestBuilder
+    * */
     fun loadJson(requestBuilder: InstaLoaderRequestBuilder){
-        var jsonValue:String? = lruCacheJson.get(requestBuilder.url)
+        var jsonValue:String? = getJson(requestBuilder.url)
         jsonValue?.let {
             jsonResponseHandler(true,JSONArray(jsonValue),"")
         } ?: kotlin.run {
-            var future=newFixedThreadPool.forBackgroundTasks().submit(DownloadBitmapFromRemote(requestBuilder))
+            var future=newFixedThreadPool.forBackgroundTasks().submit(DownloadResourceFromRemote(requestBuilder))
             hashMap.put(requestBuilder.url,future)
-            newFixedThreadPool.forMainThreadTasks().execute { getStreamBasedOnResponse(future.get(),requestBuilder)}
+            newFixedThreadPool.forBackgroundTasks().execute {
+                getStreamBasedOnResponse(future.get(),requestBuilder)
+            }
 
 
         }
-
-
-
     }
 
+
+
+    /*
+    * Cancel all the network request
+    *
+    * */
 
     fun cancelAllRequest(){
         synchronized (this) {
@@ -102,6 +123,12 @@ class InstaLoaderRepository(
             hashMap.clear()
         }
     }
+
+
+    /*
+    * Cancel single network request
+    *
+    * */
 
     fun cancelSingleRequest(url: String){
         synchronized(this){
@@ -116,7 +143,7 @@ class InstaLoaderRepository(
 
     /*
     *
-    *
+    *Handling the response return by DownloadResourceFromRemote callable function
     *
     *
     *
@@ -126,64 +153,73 @@ class InstaLoaderRepository(
         response: Response?,
         requestBuilder: InstaLoaderRequestBuilder) {
 
+            response?.let {
+                try {
 
-        response?.let {
-            try {
 
-
-                if (response.code() == 200) {
-                    when (requestBuilder.responseType) {
-                        ResponseType.IMAGE -> {
-                            var bitmap = Utils.decodeBitmap(
-                                response,
-                                requestBuilder.bitmapReqWidth,
-                                requestBuilder.bitmapReqHeight,
-                                requestBuilder.bitmapConfig,
-                                requestBuilder.bitmapOptions,
-                                requestBuilder.imageScaleType
-                            )
-                            bitmap?.let {
-                                if (requestBuilder.enableCache) {
-                                    memoryCache.putImage(requestBuilder.url, it)
-                                }
-                                bitmapResponseHandler(true, bitmap, null)
-                            } ?: kotlin.run {
-                                bitmapResponseHandler(
-                                    false,
-                                    null,
-                                    response.body().toString()
+                    if (response.code() == 200) {
+                        when (requestBuilder.responseType) {
+                            ResponseType.IMAGE -> {
+                                var bitmap = Utils.decodeBitmap(
+                                    response,
+                                    requestBuilder.bitmapReqWidth,
+                                    requestBuilder.bitmapReqHeight,
+                                    requestBuilder.bitmapConfig,
+                                    requestBuilder.bitmapOptions,
+                                    requestBuilder.imageScaleType
                                 )
-                            }
+                                bitmap?.let {
+                                    if (requestBuilder.enableCache) {
+                                        putImage(requestBuilder.url, it)
+                                    }
 
-                        }
-                        ResponseType.JSONARRAY -> {
-                            var jsonArray =
-                                JSONArray(Okio.buffer(response.body()!!.source()).readUtf8())
-                            jsonArray?.let {
-                                lruCacheJson?.put(requestBuilder.url, "" + it)
-                                jsonResponseHandler(true, it, null)
-                            } ?: kotlin.run {
-                                jsonResponseHandler(false, null, response.body().toString())
-                            }
+                                    bitmapResponseHandler(true, bitmap, null)
+                                } ?: kotlin.run {
+                                    bitmapResponseHandler(
+                                        false,
+                                        null,
+                                        response.body().toString()
+                                    )
+                                }
 
-                        }
-                        else -> {
+                            }
+                            ResponseType.JSONARRAY -> {
+                                var jsonArray =
+                                    JSONArray(Okio.buffer(response.body()!!.source()).readUtf8())
+                                jsonArray?.let {
+                                    putJson(requestBuilder.url, "" + it)
+                                    jsonResponseHandler(true, it, null)
+                                } ?: kotlin.run {
+                                    jsonResponseHandler(false, null, response.body().toString())
+                                }
+
+                            }
+                            else -> {
+                            }
                         }
                     }
+                } catch (e: Exception) {
+
+                    handleError(e.message, requestBuilder)
+
                 }
-            }catch (e:Exception){
-
-                handleError(e.message,requestBuilder)
-
-            }
-        } ?: kotlin.run {
+            } ?: kotlin.run {
 
 
-            handleError(null,requestBuilder)
+                handleError(null, requestBuilder)
 
             }
 
         }
+
+
+
+
+    /*
+    *
+    * method for handling the error
+    *
+    * */
 
     private fun handleError(errorMessage:String?,requestBuilder: InstaLoaderRequestBuilder) {
 

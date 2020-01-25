@@ -23,7 +23,7 @@ import okhttp3.Response
 
 * */
 
-class DownloadBitmapFromRemote (private val requestBuilder: InstaLoaderRequestBuilder
+class DownloadResourceFromRemote (private val requestBuilder: InstaLoaderRequestBuilder
 ) : DownloadTask<Response?>()
 {
     var client =  OkHttpClient();
@@ -36,7 +36,7 @@ class DownloadBitmapFromRemote (private val requestBuilder: InstaLoaderRequestBu
             request =  Request.Builder()
                 ?.url(url)
                 ?.build();
-            response = client.newCall(request).execute();
+            response = client.newCall(request).execute()
 
         } catch (e: Exception) {
             e.printStackTrace()

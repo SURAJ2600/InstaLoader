@@ -50,6 +50,10 @@ class LRUCacheJson(private val capacity: Int) {
         }
     }
 
+    fun clearCache(){
+        map.clear()
+    }
+
     private fun remove(node: Node) {
         val next = node.next!!
         val prev = node.prev!!
@@ -64,6 +68,8 @@ class LRUCacheJson(private val capacity: Int) {
         node.next = tail
         tail.prev = node
     }
+
+
 
     data class Node(val key: String?, val value: String?) {
         var next: Node? = null
