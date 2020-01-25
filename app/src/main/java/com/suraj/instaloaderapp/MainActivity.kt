@@ -17,8 +17,8 @@ class MainActivity : AppCompatActivity() {
         //InstaLoader.getInstance(this , CACHE_SIZE)
         InstaLoader.init(this)
 
-        InstaLoader.getInstaLoader().source("https://pastebin.com/raw/wgkJgazE").loadJson()
-        InstaLoader.getInstaLoader().source("https://pastebin.com/raw/wgkJgazE").loadJson()
+        InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
+        InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
             .getJsonArrayResponse().observe(this, Observer {
                 when(it){
                     is ResponseState.loading -> {
@@ -38,12 +38,12 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-        InstaLoader.getInstaLoader()
+        InstaLoader.getInstance()
             .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
            .placeholder(R.mipmap.ic_launcher)
            .into(imag)
 
-        InstaLoader.getInstaLoader()
+        InstaLoader.getInstance()
            .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
             .placeholder(R.mipmap.ic_launcher)
             .into(imag)

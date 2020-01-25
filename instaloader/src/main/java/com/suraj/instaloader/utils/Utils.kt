@@ -12,6 +12,12 @@ import okhttp3.Response
 import okio.Okio
 
 
+
+/*Created by suraj on 23/01/2020
+*
+* This is an Utility class for handling bitmap and other operations
+* */
+
 object Utils {
 
 

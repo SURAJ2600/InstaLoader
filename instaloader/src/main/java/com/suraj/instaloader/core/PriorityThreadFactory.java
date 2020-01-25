@@ -4,6 +4,13 @@ import android.os.Process;
 
 import java.util.concurrent.ThreadFactory;
 
+
+/*Created by suraj on 25/01/2020
+*
+* PriorityThreadFactory is use of setting the priority
+*
+* */
+
 public class PriorityThreadFactory implements ThreadFactory {
 
     private final int mThreadPriority;
