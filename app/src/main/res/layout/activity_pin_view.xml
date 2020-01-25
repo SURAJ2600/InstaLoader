@@ -18,5 +18,51 @@
     android:layout_height="match_parent"
    >
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_pins"
+        android:layout_width="@dimen/margin_0"
+        android:layout_height="@dimen/margin_0"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        app:spanCount="3"
+        app:layout_constraintBottom_toTopOf="@+id/guideLineBottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideLineRight"
+        app:layout_constraintStart_toStartOf="@+id/guideLineLeft"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTop" />
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="@dimen/progress"
+        android:layout_height="@dimen/progress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+        <!--View algin helpers-->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent=".02"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLineBottom"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.98"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLineRight"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.98"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLineLeft"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.02"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

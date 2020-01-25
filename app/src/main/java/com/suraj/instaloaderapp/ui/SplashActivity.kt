@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import com.suraj.instaloaderapp.MainActivity
 import com.suraj.instaloaderapp.R
+import com.suraj.instaloaderapp.ui.pinview.PinViewActivity
 
 class SplashActivity : AppCompatActivity() {
 
@@ -16,7 +17,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, PinViewActivity::class.java))
             finish()
         }, SPLASH_TIME_OUT)
     }
