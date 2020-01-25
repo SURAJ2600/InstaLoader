@@ -7,21 +7,28 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.AnyRes
 import androidx.annotation.DrawableRes
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.suraj.instaloader.cache.CachEvict
 import com.suraj.instaloader.cache.Config
 import com.suraj.instaloader.cache.LRUCacheJson
 import com.suraj.instaloader.cache.MemoryCache
+import com.suraj.instaloader.core.ExecutorSupplier
 import com.suraj.instaloader.manager.PlaceHolder
+import com.suraj.instaloader.manager.ResponseState
 import com.suraj.instaloader.repo.InstaLoaderRepository
 import com.suraj.instaloader.requestbuilder.InstaLoaderRequestBuilder
 import com.suraj.instaloader.requestbuilder.MethodType
 import com.suraj.instaloader.requestbuilder.ResponseType
 import okhttp3.Response
+import org.json.JSONArray
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
-class InstaLoader {
+class InstaLoader : CachEvict {
+
 
     private var mUrl: String? = null
     private var enableCache = true
@@ -30,15 +37,13 @@ class InstaLoader {
     private var mWidth = 0
     private var mHeight = 0
     private var cacheAllowed = 1f
-
-
-
+    private var jsonResponseLiveData = MutableLiveData<ResponseState>()
 
 
     companion object {
         private var contextWeakReference: WeakReference<Context>? = null
         private lateinit var fastloaderWeakReference: WeakReference<InstaLoader>
-        lateinit var repository:InstaLoaderRepository
+        lateinit var repository: InstaLoaderRepository
 
         fun with(context: Context): InstaLoader {
             contextWeakReference = WeakReference(context)
@@ -46,11 +51,12 @@ class InstaLoader {
             fastloaderWeakReference = WeakReference(fastloader)
             return getInstaLoader()
         }
+
         fun init(context: Context) {
             contextWeakReference = WeakReference(context)
             val fastloader = InstaLoader()
             fastloaderWeakReference = WeakReference(fastloader)
-          repository= this.getInstaLoader().getRepositoryWithCache(Config.defaultCacheSize)
+            repository = this.getInstaLoader().getRepositoryWithCache(Config.defaultCacheSize)
         }
 
 
@@ -58,19 +64,22 @@ class InstaLoader {
             return contextWeakReference?.get()
         }
 
-         fun getInstaLoader(): InstaLoader {
+        fun getInstaLoader(): InstaLoader {
             return fastloaderWeakReference.get()!!
         }
     }
 
-    fun getRepositoryWithCache(capacity:Int):InstaLoaderRepository{
+    fun getRepositoryWithCache(capacity: Int): InstaLoaderRepository {
 
-            return InstaLoaderRepository(MemoryCache(capacity)
-            ,  Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()),
+        return InstaLoaderRepository(
+            MemoryCache(capacity)
+            , ExecutorSupplier.getInstance(),
             HashMap<String, Future<Response?>>(),
-                LRUCacheJson(capacity)
+            LRUCacheJson(capacity)
         )
     }
+
+    fun getJsonArrayResponse(): LiveData<ResponseState> = jsonResponseLiveData
 
     /**
      * Image source by url
@@ -114,7 +123,12 @@ class InstaLoader {
         if (placeholder != PlaceHolder.placeHolder) {
             try {
                 // Try for drawable resource
-                mPlaceHolderBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getContext()?.resources, placeholder), 300, 300, true)
+                mPlaceHolderBitmap = Bitmap.createScaledBitmap(
+                    BitmapFactory.decodeResource(
+                        getContext()?.resources,
+                        placeholder
+                    ), 300, 300, true
+                )
                 PlaceHolder.placeHolder = placeholder
                 PlaceHolder.placeHolderBitmap = mPlaceHolderBitmap
                 PlaceHolder.placeHolderColor = -1
@@ -134,7 +148,7 @@ class InstaLoader {
      * Enable cache and set cache size - 0 to 1f
      * @param percent
      */
-    fun enableCache(percent: Float): InstaLoader{
+    fun enableCache(percent: Float): InstaLoader {
         enableCache = true
         cacheAllowed = percent
         return getInstaLoader()
@@ -149,7 +163,7 @@ class InstaLoader {
         return getInstaLoader()
     }
 
-    fun into(imageView: ImageView){
+    fun into(imageView: ImageView) {
         mUrl?.let {
             setDefaultIcons(imageView)
             setBitmapHandler(imageView)
@@ -157,24 +171,23 @@ class InstaLoader {
                 .setUrl(it)
                 .setMethodType(MethodType.GET)
                 .setResponseType(ResponseType.IMAGE)
-                .setBitmapWidth(if(mWidth==0) imageView.width else mWidth)
-                .setBitmapHeight(if(mHeight==0) imageView.height else mHeight)
+                .setBitmapWidth(if (mWidth == 0) imageView.width else mWidth)
+                .setBitmapHeight(if (mHeight == 0) imageView.height else mHeight)
                 .build()
-                 repository.loadImage(requestBuilder)
+            repository.loadImage(requestBuilder)
 
         } ?: kotlin.run {
-               setDefaultIcons(imageView)
+            setDefaultIcons(imageView)
         }
 
     }
 
     private fun setBitmapHandler(imageView: ImageView) {
-        repository.bitmapResponseHandler ={
-                status, bitmap, message ->
+        repository.bitmapResponseHandler = { status, bitmap, message ->
             bitmap?.let {
                 imageView.setImageBitmap(bitmap)
 
-            }?: kotlin.run {
+            } ?: kotlin.run {
                 setDefaultIcons(imageView)
 
             }
@@ -191,28 +204,9 @@ class InstaLoader {
     }
 
 
-    fun evictAllBitmapCache(){
-        repository.clearImage()
-    }
-
-    fun evictAllJsonCache(){
-        repository.clearJson()
-    }
-
-    fun cancelSingleTask(url: String){
-        repository.cancelSingleTask(url)
-    }
-
-    fun  cancelAllTask(){
-        repository.cancelAllRequest()
-    }
-
-
-
-    fun loadJson(){
-
+    fun loadJson() :InstaLoader{
         mUrl?.let {
-
+            jsonResponseLiveData.postValue(ResponseState.loading)
             setJsonResponseListner()
             var requestBuilder = InstaLoaderRequestBuilder.Builder()
                 .setUrl(it)
@@ -220,85 +214,49 @@ class InstaLoader {
                 .setResponseType(ResponseType.JSONARRAY)
                 .build()
             repository.loadJson(requestBuilder)
+            R.string.app_name
 
         } ?: kotlin.run {
+            jsonResponseLiveData.postValue(ResponseState.Error(getContext()?.getString(R.string.invalid_URL) ?: ""))
 
         }
 
-
+        return  getInstaLoader()
 
     }
 
     private fun setJsonResponseListner() {
-        repository.jsonResponseHandler={
-            status, json, message ->
-            if(status){
-                Log.e("JSONS",">>>>"+json)
-            }
-            else{
+        repository.jsonResponseHandler = { status, json, message ->
+            if (status) {
+
+                json?.let { jsonResponseLiveData.postValue(ResponseState.Success(it)) }
+                    ?:
+                    kotlin.run { jsonResponseLiveData.postValue(ResponseState.Error("" + message)) }
+            } else {
+                jsonResponseLiveData.postValue(ResponseState.Error("" + message))
 
             }
-
         }
 
     }
 
 
-    /**
-     * Load image to an ImageView
-     * @param imageView
-     */
-//    fun loadImage(imageView: ImageView) {
-//        var imageCache: CacheImage? = null
-//        var bitmap: Bitmap? = null
-//        if (enableCache) {
-//            /*Get imageCache instance*/
-//            imageCache = CacheImage[getContext(), cacheAllowed]
-//            var imageKey: String? = null
-//            if (mUrl != null) {
-//                imageKey = mUrl
-//            }
-//            if (mRes != -100) {
-//                imageKey = mRes.toString()
-//            }
-//            bitmap = imageCache.get(imageKey!!)
-//        }
-//        if (bitmap != null) {
-//            imageView.setImageBitmap(bitmap)
-//        } else {
-//            if (mUrl != null) { /*Load using url*/
-//                val task = LoadImageFromUrl(imageView, imageCache, enableCache, mWidth, mHeight, mUrl!!)
-//
-//                // Set Placeholder
-//                if (PlaceHolder.placeHolderBitmap != null) { // Placeholder is bitmap
-//                    imageView.setImageBitmap(PlaceHolder.placeHolderBitmap)
-//                } else if (PlaceHolder.placeHolderColor != -1) { // Placeholder is color
-//                    imageView.setImageResource(PlaceHolder.placeHolderColor)
-//                }
-//
-//                task.execute()
-//            }
-//            if (mRes != -100) { /*Load using Drawable resource*/
-//                val task =
-//                    LoadImageFromDrawable(getContext(), imageView, imageCache, enableCache, mWidth, mHeight, mRes)
-//
-//                // Set Placeholder
-//                if (PlaceHolder.placeHolderBitmap != null) { // Placeholder is bitmap
-//                    imageView.setImageBitmap(PlaceHolder.placeHolderBitmap)
-//                } else if (PlaceHolder.placeHolderColor != -1) { // Placeholder is color
-//                    imageView.setImageResource(PlaceHolder.placeHolderColor)
-//                }
-//
-//                task.execute()
-//            }
-//        }
-//
-//
-//    }
+    override fun evictAllBitmap() {
+        repository.evictAllBitmap()
+    }
 
+    override fun evictAllJson() {
+        repository.clearJson()
+    }
 
+    override fun cancelSingleRequest(url: String) {
+        repository.cancelSingleRequest(url)
+    }
 
+    override fun cancelAllTask() {
+        repository.cancelAllRequest()
 
+    }
 
 
 }

@@ -8,6 +8,11 @@ import com.suraj.instaloader.interfaces.Caches
 
 /*Created bu suraj on 24/02/2012*/
 
+/*A memory cache layer for cacheing the bitmap
+* This class use the default LRU cache provided by Android Team
+*
+* */
+
 class MemoryCache (newMaxSize: Int) : Caches {
 
     private val cache : LruCache<String, Bitmap>
@@ -27,9 +32,6 @@ class MemoryCache (newMaxSize: Int) : Caches {
         }
     }
 
-
-
-
     override fun putImage(url: String, bitmap: Bitmap) {
         cache.put(url,bitmap)
     }
@@ -38,7 +40,7 @@ class MemoryCache (newMaxSize: Int) : Caches {
         return  cache.get(url)
     }
 
-    override fun clearImage() {
+    override fun evictAllBitmap() {
         cache.evictAll()
     }
 

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">InstaLoader</string>
+    <string name="invalid_URL">Please use a valid URL</string>
 </resources>

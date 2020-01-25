@@ -3,13 +3,18 @@ package com.suraj.instaloader.interfaces
 import android.graphics.Bitmap
 import org.json.JSONObject
 
+/*Created by suraj on 25/01/2020
+*
+* Interface class for defining the common method for cache
+* */
+
 interface Caches {
 
     fun putImage(url: String, bitmap: Bitmap)
 
     fun getImage(url: String): Bitmap?
 
-    fun clearImage()
+    fun evictAllBitmap()
 
 
     interface CacheJson {

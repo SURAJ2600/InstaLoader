@@ -13,6 +13,16 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 
+
+/*Create by suraj on 24/02/2020
+*
+*
+* This is an class for handling the network call in asynchronous,
+* This class helps to return the specified response to the caller funtion
+
+
+* */
+
 class DownloadBitmapFromRemote (private val requestBuilder: InstaLoaderRequestBuilder
 ) : DownloadTask<Response?>()
 {

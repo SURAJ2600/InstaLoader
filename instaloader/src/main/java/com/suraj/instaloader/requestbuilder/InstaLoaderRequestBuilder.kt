@@ -4,6 +4,16 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
 
+
+
+
+/*Created by suraj on 24/01/2020
+*
+* A data class for holding the request from instaloader ,JSON or BITMAP,
+*
+*
+* */
+
 data class InstaLoaderRequestBuilder(
     val url:String,
     val enableCache:Boolean,

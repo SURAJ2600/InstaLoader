@@ -3,7 +3,10 @@ package com.suraj.instaloaderapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import androidx.lifecycle.Observer
 import com.suraj.instaloader.InstaLoader
+import com.suraj.instaloader.manager.ResponseState
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +19,25 @@ class MainActivity : AppCompatActivity() {
 
         InstaLoader.getInstaLoader().source("https://pastebin.com/raw/wgkJgazE").loadJson()
         InstaLoader.getInstaLoader().source("https://pastebin.com/raw/wgkJgazE").loadJson()
+            .getJsonArrayResponse().observe(this, Observer {
+                when(it){
+                    is ResponseState.loading -> {
+                        Log.e("Response",">>>>>>>"+it)
+
+                    }
+                    is ResponseState.Error->{
+
+                    }
+                    is ResponseState.Success->{
+                        Log.e("Response",">>>>>>>"+it.jsonArray)
+
+
+                    }
+
+
+                }
+            })
+
         InstaLoader.getInstaLoader()
             .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
            .placeholder(R.mipmap.ic_launcher)
