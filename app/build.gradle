@@ -21,16 +21,96 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'LICENSE.txt'
+        exclude 'licenses/javolution.license.TXT'
+        exclude 'META-INF/license/LICENSE.base64.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'org/apache/maven/project/pom-4.0.0.xml'
+        exclude 'META-INF/rxjava.properties'
+        exclude 'licenses/extreme.indiana.edu.license.TXT'
+        exclude 'org/cyberneko/html/res/'
+    }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+    configurations.all {
+        resolutionStrategy.force 'androidx.annotation:annotation:1.0.0'
+    }
 }
-
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.1'
+}
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation project(':instaloader')
+
+
+    // App Compat Android X
     implementation 'androidx.appcompat:appcompat:1.1.0'
+
+    // Design
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation 'com.squareup.retrofit2:retrofit-mock:2.5.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+
+    // OkHttp3
+    implementation "com.squareup.okhttp3:okhttp:4.3.1"
+
+    //implementation 'com.squareup.okhttp3:okhttp:3.14.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.0'
+
+    // RxJava
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.12'
+
+
+    // Koin
+    implementation "org.koin:koin-core:2.0.1"
+    implementation "org.koin:koin-android-viewmodel:2.0.1"
+    implementation "org.koin:koin-androidx-scope:2.0.1"
+
+    // Testing
+    // Testing
+    testImplementation 'org.koin:koin-test:2.0.0-rc-1'
+    // Architecture Components
+    implementation 'android.arch.lifecycle:runtime:1.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation 'android.arch.lifecycle:reactivestreams:1.1.1'
+    implementation 'android.arch.lifecycle:common-java8:1.1.1'
+
+
+
+
+    // Unit Test
     testImplementation 'junit:junit:4.12'
+    testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
+    testImplementation 'org.mockito:mockito-inline:2.28.2'
+    testImplementation 'org.mockito:mockito-inline:2.28.2'
+    testImplementation 'androidx.arch.core:core-testing:2.1.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation 'org.robolectric:robolectric:4.3'
+
+    // Android Instrumentation
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test:core:1.2.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation project(path: ':instaloader')
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
+    androidTestImplementation 'org.robolectric:robolectric:4.3'
 }
