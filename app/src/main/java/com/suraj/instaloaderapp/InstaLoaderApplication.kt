@@ -11,7 +11,7 @@ class InstaLoaderApplication :Application() {
     override fun onCreate() {
         super.onCreate()
 
-
+        InstaLoader.init(this)
         startKoin {
             androidContext(this@InstaLoaderApplication)
             modules(AppModule)

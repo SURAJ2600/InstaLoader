@@ -22,12 +22,10 @@ import com.suraj.instaloader.requestbuilder.InstaLoaderRequestBuilder
 import com.suraj.instaloader.requestbuilder.MethodType
 import com.suraj.instaloader.requestbuilder.ResponseType
 import okhttp3.Response
+import org.json.JSONArray
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Future
-
-
-
 
 
 /*Created by suraj on 24/02/2020
@@ -41,16 +39,18 @@ import java.util.concurrent.Future
 class InstaLoader : CachEvict {
     companion object {
         private var contextWeakReference: WeakReference<Context>? = null
-        private lateinit var fastloader :InstaLoader
+        private lateinit var fastloader: InstaLoader
         lateinit var repository: InstaLoaderRepository
-        var bitmapResponseHandler: (status:Boolean,bitmap: Bitmap?,message:String?) -> Unit = {status,bitmap, message ->  }
+        var responseHandlerListener: (status: Boolean, data: Any?, message: String?) -> Unit =
+            { status, data, message -> }
 
         fun with(context: Context): InstaLoader {
             contextWeakReference = WeakReference(context)
-             fastloader = InstaLoader()
+            fastloader = InstaLoader()
 
             return getInstance()
         }
+
         /**
          * Initializes InstaLoader with the default config.
          *
@@ -59,7 +59,7 @@ class InstaLoader : CachEvict {
 
         fun init(context: Context) {
             contextWeakReference = WeakReference(context)
-             fastloader = InstaLoader()
+            fastloader = InstaLoader()
 
             repository = this.getInstance().getRepositoryWithCache(Config.defaultCacheSize)
         }
@@ -76,6 +76,7 @@ class InstaLoader : CachEvict {
             return fastloader
         }
     }
+
     /*
        *
        * Instaloader default variables
@@ -114,8 +115,6 @@ class InstaLoader : CachEvict {
     fun getJsonArrayResponse(): LiveData<ResponseState> = jsonResponseLiveData
 
 
-
-
     /*
     * @return the instance of InstaLoaderRepository with specified parameter,
     *
@@ -132,7 +131,6 @@ class InstaLoader : CachEvict {
             LRUCacheJson(capacity)
         )
     }
-
 
 
     /**
@@ -223,23 +221,32 @@ class InstaLoader : CachEvict {
     fun into(imageView: ImageView) {
 
         mUrl?.let {
-            if(it.startsWith("http")||it.startsWith("https")) {
+            if (it.startsWith("http") || it.startsWith("https")) {
                 setDefaultIcons(imageView)
-                imageView.tag =mUrl
+                imageView.tag = mUrl
                 var requestBuilder = InstaLoaderRequestBuilder.Builder()
                     .setUrl(it)
                     .setMethodType(MethodType.GET)
                     .setResponseType(ResponseType.IMAGE)
+                    .setScaleType(ImageView.ScaleType.FIT_XY)
                     .setBitmapWidth(if (mWidth == 0) imageView.width else mWidth)
                     .setBitmapHeight(if (mHeight == 0) imageView.height else mHeight)
                     .build()
-              repository.loadImage(requestBuilder,imageView, bitmapResponseHandler = {
-                  status, bitmap, message ->
-                  imageView.setImageBitmap(bitmap)
-              })
+                try {
+                    repository.loadImage(
+                        requestBuilder,
+                        responseHandlerListener = { status, bitmap, message ->
+                            bitmap?.let {
+                                imageView.setImageBitmap(bitmap as Bitmap)
+                            } ?: kotlin.run {
+                                setDefaultIcons(imageView)
+                            }
+                        })
+                } catch (e: Exception) {
+                    setDefaultIcons(imageView)
+                }
 
-            }
-            else{
+            } else {
                 setDefaultIcons(imageView)
             }
 
@@ -271,20 +278,6 @@ class InstaLoader : CachEvict {
     *
     * */
 
-    private fun setBitmapHandler(imageView: ImageView) {
-        repository.bitmapResponseHandler = { status, bitmap, message ->
-            handler.post {
-                bitmap?.let {
-                    imageView.setImageBitmap(bitmap)
-                } ?: kotlin.run {
-                    setDefaultIcons(imageView)
-
-                }
-            }
-        }
-    }
-
-
 
     /*
     *
@@ -292,47 +285,51 @@ class InstaLoader : CachEvict {
     *
     * */
 
-    fun loadJson() :InstaLoader{
+    fun loadJson(): InstaLoader {
         mUrl?.let {
             jsonResponseLiveData.postValue(ResponseState.loading)
-            setJsonResponseListner()
             var requestBuilder = InstaLoaderRequestBuilder.Builder()
                 .setUrl(it)
                 .setMethodType(MethodType.GET)
                 .setResponseType(ResponseType.JSONARRAY)
                 .build()
-            repository.loadJson(requestBuilder)
+
+            try {
+                repository.loadJson(
+                    requestBuilder,
+                    responseHandlerListener = { status, data, message ->
+                        if (status) {
+                            var json = data as JSONArray ?: null
+                            json?.let { jsonResponseLiveData.postValue(ResponseState.Success(it)) }
+                                ?: kotlin.run { jsonResponseLiveData.postValue(ResponseState.Error("" + message)) }
+                        } else {
+                            jsonResponseLiveData.postValue(ResponseState.Error("" + message))
+
+                        }
+                    }
+                )
+            } catch (e: Exception) {
+                jsonResponseLiveData.postValue(
+                    ResponseState.Error(
+                        getContext()?.getString(R.string.invalid_URL) ?: ""
+                    )
+                )
+
+            }
             R.string.app_name
 
         } ?: kotlin.run {
-            jsonResponseLiveData.postValue(ResponseState.Error(getContext()?.getString(R.string.invalid_URL) ?: ""))
+            jsonResponseLiveData.postValue(
+                ResponseState.Error(
+                    getContext()?.getString(R.string.invalid_URL) ?: ""
+                )
+            )
 
         }
 
-        return  getInstance()
+        return getInstance()
 
     }
-
-    /*
-    * Listner for getting response from InstaLoaderRepository
-    *
-    * */
-
-    private fun setJsonResponseListner() {
-        repository.jsonResponseHandler = { status, json, message ->
-            if (status) {
-
-                json?.let { jsonResponseLiveData.postValue(ResponseState.Success(it)) }
-                    ?:
-                    kotlin.run { jsonResponseLiveData.postValue(ResponseState.Error("" + message)) }
-            } else {
-                jsonResponseLiveData.postValue(ResponseState.Error("" + message))
-
-            }
-        }
-
-    }
-
 
 
     /*

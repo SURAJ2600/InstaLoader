@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.suraj.instaloader.InstaLoader
 import com.suraj.instaloaderapp.R
 import com.suraj.instaloaderapp.datastore.model.PinView
+import com.suraj.instaloaderapp.ui.fullview.FullImageViewActivity
 import com.suraj.instaloaderapp.utils.loadImage
 
 class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
@@ -43,6 +44,10 @@ class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
 
     override fun onBindViewHolder(holder: PinViewHolder, position: Int) {
         holder.bind(pinViewList[position])
+
+        if(position==0){
+            InstaLoader.getInstance().cancelSingleRequest(pinViewList[position].profileImage ?: "")
+        }
     }
 
     class PinViewHolder(
@@ -51,6 +56,7 @@ class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
 
         private var parentConstrain = itemView.findViewById<ConstraintLayout>(R.id.parentContsraint)
         private var imgPinView = itemView.findViewById<ImageView>(R.id.imgPinView)
+        private var txtName = itemView.findViewById<TextView>(R.id.txtName)
 
         private var parent = itemView
 
@@ -58,17 +64,18 @@ class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
             Log.e("URLS",">>>>>>>>>>>>"+view.profileImage)
             InstaLoader.getInstance().source(view.profileImage!!)
                 .into(imgPinView)
-        //    loadImage(imgPinView,view.profileImage ?: "")
+            txtName.text="${view.name}"
 
-//            txvNewsSource.text = view.source
-//            txvDate.text = convertDate(view.publishedAt)
-//            txvTitle.text = view.title
-//
-//            loadImage(imvNews, view.urlToImage)
-//
-//            itemView.setOnClickListener {
-//                parent.context.startActivity(DetailActivity.newIntent(parent.context, view.title))
-//            }
+
+            itemView.setOnClickListener {
+                parent.context.startActivity(FullImageViewActivity.newIntent(parent.context, view.profileImage ?: ""))
+            }
+            txtName.setOnClickListener { itemView.performClick() }
+            parentConstrain.setOnClickListener { itemView.performClick() }
+            imgPinView.setOnClickListener { itemView.performClick() }
+
+
+
         }
 
     }

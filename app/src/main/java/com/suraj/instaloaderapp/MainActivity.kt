@@ -37,11 +37,11 @@ class MainActivity : AppCompatActivity() {
 //            })
 
         InstaLoader.getInstance()
-            .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
+            .source("https://images.unsplash.com/profile-1459198013794-1b8e57737f57?ixlib=rb-0.3.5\u0026q=80\u0026fm=jpg\u0026crop=faces\u0026fit=crop\u0026h=128\u0026w=128\u0026s=03cfd5d0ceeb58f8a2c7fc3a42afead4")
            .placeholder(R.mipmap.ic_launcher)
            .into(imag)
         InstaLoader.getInstance()
-            .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
+            .source("https://images.unsplash.com/profile-1459198013794-1b8e57737f57?ixlib=rb-0.3.5\\u0026q=80\\u0026fm=jpg\\u0026crop=faces\\u0026fit=crop\\u0026h=128\\u0026w=128\\u0026s=03cfd5d0ceeb58f8a2c7fc3a42afead4")
             .placeholder(R.mipmap.ic_launcher)
             .into(imgs)
 

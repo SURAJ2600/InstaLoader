@@ -3,6 +3,7 @@ package com.suraj.instaloaderapp.ui.pinview
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.Observer
 import com.suraj.instaloader.InstaLoader
 import com.suraj.instaloaderapp.BR
@@ -29,27 +30,13 @@ class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        InstaLoader.init(this)
+
         dataBinding=getViewDataBinding()
         setUpRecylerView()
         observeViewModel()
-        getjson()
-    }
-
-    private fun getjson() {
-
-
-
-//        for (i in 0..15) {
-//            InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
-//                .getJsonArrayResponse()
-//                .observe(this, Observer {
-//                    Log.e("Json", ">>>" + it.toString())
-//                })
-//        }
-
 
     }
+
 
     private fun setUpRecylerView() {
         adapter= PinViewAdapter()
@@ -63,12 +50,16 @@ class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
             pinViewResponse().observe(this@PinViewActivity, Observer {
                 when(it)
                 {
-                    is PinViewState.Loading->{}
+                    is PinViewState.Loading->{
+                        dataBinding.progress.visibility=View.VISIBLE
+
+                    }
                     is PinViewState.Error ->{
-                        Log.e("Error",">>>>>>>>>>"+it.errorMessage)
+                        dataBinding.progress.visibility=View.GONE
+
                     }
                     is PinViewState.Success->{
-                        Log.e("Error",">>>>>>>>>>"+it.list)
+                        dataBinding.progress.visibility=View.GONE
                         adapter.addNews(it.list.toMutableList() ?: mutableListOf())
 
                     }

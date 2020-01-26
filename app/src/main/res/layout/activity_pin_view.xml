@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.MainActivity">
+    >
 
     <data>
         <import type="android.view.View" />
@@ -16,6 +16,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black_color"
    >
 
     <androidx.recyclerview.widget.RecyclerView
@@ -33,6 +34,7 @@
         android:id="@+id/progress"
         android:layout_width="@dimen/progress"
         android:layout_height="@dimen/progress"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -21,7 +21,7 @@ class Main2Activity : AppCompatActivity() {
             .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
             .placeholder(R.mipmap.ic_launcher)
             .into(imgs)
-
+        InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
         InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
 
     }

@@ -6,7 +6,7 @@
 
     <color name="titleBackground">#000000</color>
     <color name="black_color">#464646</color>
-    <color name="toolbarTextColor">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="itemTitleTextColor">#F2F2F2</color>
     <color name="itemNewsSourceTextColor">#BABABA</color>
 

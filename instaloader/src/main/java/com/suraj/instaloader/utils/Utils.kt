@@ -24,7 +24,7 @@ object Utils {
     fun decodeBitmap(
         response: Response, maxWidth: Int,
         maxHeight: Int, decodeConfig: Bitmap.Config,
-        scaleType: ImageView.ScaleType
+        scaleType: ImageView.ScaleType?
     ): Bitmap? {
         return decodeBitmap(
             response, maxWidth, maxHeight, decodeConfig,
@@ -32,11 +32,14 @@ object Utils {
         )
     }
 
+    fun decodeResponse(response: Response):Bitmap?{
+       return BitmapFactory.decodeStream(response.body()?.byteStream())
+    }
     fun decodeBitmap(
         response: Response?, maxWidth: Int,
         maxHeight: Int, decodeConfig: Bitmap.Config,
         decodeOptions: BitmapFactory.Options,
-        scaleType: ImageView.ScaleType
+        scaleType: ImageView.ScaleType?
     ): Bitmap? {
         var data = ByteArray(0)
         try {
@@ -65,14 +68,14 @@ object Utils {
             )
 
             decodeOptions.inJustDecodeBounds = false
-            decodeOptions.inSampleSize =
-                findBestSampleSize(actualWidth, actualHeight, desiredWidth, desiredHeight)
+            decodeOptions.inScaled=false
+            decodeOptions.inSampleSize =findBestSampleSize(actualWidth, actualHeight, desiredWidth, desiredHeight)
             val tempBitmap = BitmapFactory.decodeByteArray(data, 0, data.size, decodeOptions)
 
             if (tempBitmap != null && (tempBitmap.width > desiredWidth || tempBitmap.height > desiredHeight)) {
                 bitmap = Bitmap.createScaledBitmap(
                     tempBitmap,
-                    desiredWidth, desiredHeight, true
+                    desiredWidth, desiredHeight, false
                 )
                 tempBitmap.recycle()
             } else {
@@ -80,18 +83,14 @@ object Utils {
             }
         }
 
-        if (bitmap == null) {
-            // return ANResponse.failed(Utils.getErrorForParse(new ANError(response)));
-        } else {
-            //return ANResponse.success(bitmap);
-        }
+
         return bitmap
     }
 
     private fun getResizedDimension(
         maxPrimary: Int, maxSecondary: Int,
         actualPrimary: Int, actualSecondary: Int,
-        scaleType: ImageView.ScaleType
+        scaleType: ImageView.ScaleType?
     ): Int {
 
         if (maxPrimary == 0 && maxSecondary == 0) {

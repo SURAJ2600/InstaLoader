@@ -32,11 +32,11 @@ data class InstaLoaderRequestBuilder(
         private var responseType: ResponseType?=null //Response Type
         private var bitmapReqWidth: Int =0 //Bitmap required width
         private var bitmapReqHeight: Int = 0 //Bitmap required height
-        private var bitmapConfig:Bitmap.Config= Bitmap.Config.ARGB_8888 //Setting default config for bitmap
+        private var bitmapConfig:Bitmap.Config= Bitmap.Config.RGB_565  //Setting default config for bitmap
         private var bitmapOptions: BitmapFactory.Options = BitmapFactory.Options().apply {
             inPurgeable =true
         } //Setting default Bitmap.OPTION
-        private var imageScaleType: ImageView.ScaleType = ImageView.ScaleType.CENTER_INSIDE //Seeting default scale type
+        private var imageScaleType: ImageView.ScaleType = ImageView.ScaleType.FIT_XY //Seeting default scale type
 
 
         fun setUrl(url:String):Builder{
