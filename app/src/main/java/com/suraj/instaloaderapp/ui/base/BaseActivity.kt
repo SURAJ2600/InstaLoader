@@ -6,6 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
+import com.suraj.instaloader.InstaLoader
 import com.suraj.instaloaderapp.R
 
 abstract class BaseActivity <T: ViewDataBinding,V: ViewModel> : AppCompatActivity() {
@@ -31,7 +32,11 @@ abstract class BaseActivity <T: ViewDataBinding,V: ViewModel> : AppCompatActivit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setBindingAndViewmodel();
+    }
+    fun getViewDataBinding(): T {
+        return mViewDataBinding!!
     }
 
     private fun setBindingAndViewmodel() {

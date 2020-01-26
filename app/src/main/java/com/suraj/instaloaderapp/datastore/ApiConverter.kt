@@ -15,7 +15,7 @@ class ApiConverter : Function<List<ApiResponse>, List<PinView>> {
             val pinView = PinView.Builder().setId(data.id ?: "")
                 .setName(data.user.name ?: "")
                 .setLikes(data.likes ?: "")
-                .setProfileImage(data.user.profile_image.medium).build()
+                .setProfileImage(data.user.profile_image.large).build()
             pinViewList.add(pinView)
 
         }

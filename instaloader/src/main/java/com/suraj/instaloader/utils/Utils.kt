@@ -33,14 +33,14 @@ object Utils {
     }
 
     fun decodeBitmap(
-        response: Response, maxWidth: Int,
+        response: Response?, maxWidth: Int,
         maxHeight: Int, decodeConfig: Bitmap.Config,
         decodeOptions: BitmapFactory.Options,
         scaleType: ImageView.ScaleType
     ): Bitmap? {
         var data = ByteArray(0)
         try {
-            data = Okio.buffer(response.body()!!.source()).readByteArray()
+            data = Okio.buffer(response?.body()!!.source()).readByteArray()
         } catch (e: IOException) {
             e.printStackTrace()
         }

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.Observer
+import com.suraj.instaloader.InstaLoader
 import com.suraj.instaloaderapp.BR
 
 import com.suraj.instaloaderapp.R
@@ -16,7 +17,9 @@ class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
 
 
     val pinviewModel : PinViewModel by viewModel()
+   lateinit var dataBinding:ActivityPinViewBinding
 
+    private lateinit var adapter: PinViewAdapter
 
     override fun getBindingVariable(): Int { return  BR.viewModel  }
 
@@ -26,14 +29,36 @@ class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pin_view)
-
+        InstaLoader.init(this)
+        dataBinding=getViewDataBinding()
+        setUpRecylerView()
         observeViewModel()
+        getjson()
+    }
+
+    private fun getjson() {
+
+
+
+//        for (i in 0..15) {
+//            InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
+//                .getJsonArrayResponse()
+//                .observe(this, Observer {
+//                    Log.e("Json", ">>>" + it.toString())
+//                })
+//        }
+
+
+    }
+
+    private fun setUpRecylerView() {
+        adapter= PinViewAdapter()
+        dataBinding.rvPins.adapter=adapter
     }
 
     private fun observeViewModel() {
         with(pinviewModel){
-            this.getPinView("wgkJzzzzzgazE")
+            this.getPinView("wgkJgazE")
 
             pinViewResponse().observe(this@PinViewActivity, Observer {
                 when(it)
@@ -44,6 +69,7 @@ class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
                     }
                     is PinViewState.Success->{
                         Log.e("Error",">>>>>>>>>>"+it.list)
+                        adapter.addNews(it.list.toMutableList() ?: mutableListOf())
 
                     }
 

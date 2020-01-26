@@ -1,6 +1,9 @@
 package com.suraj.instaloader.repo
 
 import android.graphics.Bitmap
+import android.os.Handler
+import android.os.Looper
+import android.widget.ImageView
 import com.suraj.instaloader.bacgroundTasks.DownloadResourceFromRemote
 import com.suraj.instaloader.cache.LRUCacheJson
 import com.suraj.instaloader.cache.MemoryCache
@@ -33,6 +36,9 @@ class InstaLoaderRepository(
     var hashMap: HashMap<String, Future<Response?>>,
     var lruCacheJson: LRUCacheJson
 ) : Caches, Caches.CacheJson {
+   lateinit var bitmsa:setBitmap
+    private val handler = Handler(Looper.getMainLooper())
+
     var bitmapResponseHandler: (status:Boolean,bitmap: Bitmap?,message:String?) -> Unit = {status,bitmap, message ->  }
     var jsonResponseHandler: (status:Boolean,json: JSONArray?,message:String?) -> Unit = {status,bitmap, message ->  }
 
@@ -69,21 +75,33 @@ class InstaLoaderRepository(
     *
     * */
 
-    fun loadImage(requestBuilder: InstaLoaderRequestBuilder) {
+    fun loadImage(
+        requestBuilder: InstaLoaderRequestBuilder,
+        view: ImageView,
+        bitmapResponseHandler: (status: Boolean, bitmap: Bitmap?, message: String?) -> Unit
+    ): InstaLoaderRepository{
         var bitmap = getImage(requestBuilder.url)
         bitmap?.let {
-            bitmapResponseHandler(true,bitmap,null)
-            return
+            bitmapResponseHandler.invoke(true,bitmap,"")
         } ?: kotlin.run {
-            var future = newFixedThreadPool.forBackgroundTasks().submit(DownloadResourceFromRemote(requestBuilder))
+            var future = newFixedThreadPool.forBackgroundTasks()
+                .submit(DownloadResourceFromRemote(requestBuilder))
             hashMap.put(requestBuilder.url, future)
-            newFixedThreadPool.forLightWeightBackgroundTasks().execute {
-                getStreamBasedOnResponse(future.get(),requestBuilder)
+            newFixedThreadPool.forBackgroundTasks().execute {
+                getStreamBasedOnResponse(future.get(), requestBuilder, bitmapResponseHandler)
             }
 
         }
+            return  this
     }
 
+    interface setBitmap{
+        fun setBitmap(bitmap: Bitmap)
+    }
+
+    fun setBitmap (bitmap: setBitmap){
+        this.bitmsa =bitmap
+    }
 
 
 
@@ -99,9 +117,10 @@ class InstaLoaderRepository(
         } ?: kotlin.run {
             var future=newFixedThreadPool.forBackgroundTasks().submit(DownloadResourceFromRemote(requestBuilder))
             hashMap.put(requestBuilder.url,future)
-            newFixedThreadPool.forLightWeightBackgroundTasks().execute {
-                getStreamBasedOnResponse(future.get(),requestBuilder)
+          var futusre =   newFixedThreadPool.forBackgroundTasks().execute {
+           //     getStreamBasedOnResponse(future.get(), requestBuilder, null)
             }
+
 
 
         }
@@ -149,14 +168,16 @@ class InstaLoaderRepository(
     *
     * */
 
+
+
     private fun getStreamBasedOnResponse(
         response: Response?,
-        requestBuilder: InstaLoaderRequestBuilder) {
+        requestBuilder: InstaLoaderRequestBuilder,
+        view: (status: Boolean, bitmap: Bitmap?, message: String?) -> Unit
+    ) {
 
             response?.let {
                 try {
-
-
                     if (response.code() == 200) {
                         when (requestBuilder.responseType) {
                             ResponseType.IMAGE -> {
@@ -172,8 +193,7 @@ class InstaLoaderRepository(
                                     if (requestBuilder.enableCache) {
                                         putImage(requestBuilder.url, it)
                                     }
-
-                                    bitmapResponseHandler(true, bitmap, null)
+                                    view.invoke(true,bitmap,"")
                                 } ?: kotlin.run {
                                     bitmapResponseHandler(
                                         false,
@@ -184,8 +204,8 @@ class InstaLoaderRepository(
 
                             }
                             ResponseType.JSONARRAY -> {
-                                var jsonArray =
-                                    JSONArray(Okio.buffer(response.body()!!.source()).readUtf8())
+                                var jsonArray :JSONArray?=null
+                                   jsonArray=  JSONArray(Okio.buffer(response.body()!!.source()).readUtf8())
                                 jsonArray?.let {
                                     putJson(requestBuilder.url, "" + it)
                                     jsonResponseHandler(true, it, null)

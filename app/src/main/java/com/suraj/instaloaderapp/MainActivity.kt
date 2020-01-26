@@ -40,6 +40,10 @@ class MainActivity : AppCompatActivity() {
             .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
            .placeholder(R.mipmap.ic_launcher)
            .into(imag)
+        InstaLoader.getInstance()
+            .source("https://i.pinimg.com/originals/93/09/77/930977991c52b48e664c059990dea125.jpg")
+            .placeholder(R.mipmap.ic_launcher)
+            .into(imgs)
 
       //  InstaLoader.getInstance().source("https://pastebin.com/raw/wgkJgazE").loadJson()
 

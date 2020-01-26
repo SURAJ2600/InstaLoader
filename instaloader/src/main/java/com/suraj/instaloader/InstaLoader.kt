@@ -41,13 +41,14 @@ import java.util.concurrent.Future
 class InstaLoader : CachEvict {
     companion object {
         private var contextWeakReference: WeakReference<Context>? = null
-        private lateinit var fastloaderWeakReference: WeakReference<InstaLoader>
+        private lateinit var fastloader :InstaLoader
         lateinit var repository: InstaLoaderRepository
+        var bitmapResponseHandler: (status:Boolean,bitmap: Bitmap?,message:String?) -> Unit = {status,bitmap, message ->  }
 
         fun with(context: Context): InstaLoader {
             contextWeakReference = WeakReference(context)
-            val fastloader = InstaLoader()
-            fastloaderWeakReference = WeakReference(fastloader)
+             fastloader = InstaLoader()
+
             return getInstance()
         }
         /**
@@ -58,8 +59,8 @@ class InstaLoader : CachEvict {
 
         fun init(context: Context) {
             contextWeakReference = WeakReference(context)
-            val fastloader = InstaLoader()
-            fastloaderWeakReference = WeakReference(fastloader)
+             fastloader = InstaLoader()
+
             repository = this.getInstance().getRepositoryWithCache(Config.defaultCacheSize)
         }
 
@@ -72,7 +73,7 @@ class InstaLoader : CachEvict {
          * @return the InstaLoader instance
          */
         fun getInstance(): InstaLoader {
-            return fastloaderWeakReference.get()!!
+            return fastloader
         }
     }
     /*
@@ -220,17 +221,27 @@ class InstaLoader : CachEvict {
      */
 
     fun into(imageView: ImageView) {
+
         mUrl?.let {
-            setDefaultIcons(imageView)
-            setBitmapHandler(imageView)
-            var requestBuilder = InstaLoaderRequestBuilder.Builder()
-                .setUrl(it)
-                .setMethodType(MethodType.GET)
-                .setResponseType(ResponseType.IMAGE)
-                .setBitmapWidth(if (mWidth == 0) imageView.width else mWidth)
-                .setBitmapHeight(if (mHeight == 0) imageView.height else mHeight)
-                .build()
-            repository.loadImage(requestBuilder)
+            if(it.startsWith("http")||it.startsWith("https")) {
+                setDefaultIcons(imageView)
+                imageView.tag =mUrl
+                var requestBuilder = InstaLoaderRequestBuilder.Builder()
+                    .setUrl(it)
+                    .setMethodType(MethodType.GET)
+                    .setResponseType(ResponseType.IMAGE)
+                    .setBitmapWidth(if (mWidth == 0) imageView.width else mWidth)
+                    .setBitmapHeight(if (mHeight == 0) imageView.height else mHeight)
+                    .build()
+              repository.loadImage(requestBuilder,imageView, bitmapResponseHandler = {
+                  status, bitmap, message ->
+                  imageView.setImageBitmap(bitmap)
+              })
+
+            }
+            else{
+                setDefaultIcons(imageView)
+            }
 
         } ?: kotlin.run {
             setDefaultIcons(imageView)
