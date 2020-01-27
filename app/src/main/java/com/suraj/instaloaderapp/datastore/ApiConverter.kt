@@ -5,6 +5,13 @@ import com.suraj.instaloaderapp.api.model.ApiResponse
 import com.suraj.instaloaderapp.datastore.model.PinView
 import io.reactivex.functions.Function
 
+/**
+ * @author  suraj s
+ *
+ * Converter class for mapping the apiResponse from server to app specific data
+ *
+ *
+ * */
 class ApiConverter : Function<List<ApiResponse>, List<PinView>> {
     override fun apply(apiResponse: List<ApiResponse>): List<PinView> {
         val pinViewList = mutableListOf<PinView>()

@@ -12,6 +12,16 @@ import com.suraj.instaloaderapp.di.AppModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
+
+/**
+ * @author Suraj s
+*
+* Base application class for InstaLoader Application
+*
+*
+*
+* */
+
 class InstaLoaderApplication :Application(), LifecycleObserver {
 
     companion object {

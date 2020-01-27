@@ -12,10 +12,13 @@ import java.io.IOException
 import java.net.UnknownHostException
 import java.util.*
 
+
+
+/*
+*
+* repository for fetching data from remote amd supply to viewmodel
+* */
 class PinViewRepository(var remoteHelper:Remote,var pinViewConverter: PinViewStateConverter) {
-
-
-
     fun getPinViewData(id:String) :Observable<PinViewState>{
      return   remoteHelper.getPinViewData(id)
             .map(pinViewConverter)

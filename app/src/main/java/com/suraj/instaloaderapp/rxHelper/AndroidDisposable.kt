@@ -3,6 +3,11 @@ package com.suraj.instaloaderapp.rxHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
+
+/*
+*
+* A common class for handling Android disposable
+* */
 class AndroidDisposable {
     var compositeDisposable: CompositeDisposable?=null
 

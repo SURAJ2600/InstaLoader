@@ -5,7 +5,12 @@ import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
-
+/**
+ * @author Suraj s
+ *
+ * ApiInterface class for specifying the api end pints
+ *
+ * */
 interface ApiInterface {
 
     @GET("raw/{id}")

@@ -8,6 +8,12 @@ import com.suraj.instaloader.InstaLoader
 import com.suraj.instaloaderapp.R
 import kotlinx.android.synthetic.main.activity_full_image_view.*
 
+
+
+/*
+*
+*
+* */
 class FullImageViewActivity : AppCompatActivity() {
     companion object {
         const val imageUrl = "url"

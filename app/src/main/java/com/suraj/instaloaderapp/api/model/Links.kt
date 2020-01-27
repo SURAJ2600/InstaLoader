@@ -1,7 +1,12 @@
 package com.suraj.instaloaderapp.api.model
 
 import com.google.gson.annotations.SerializedName
-
+/**
+ * @author Suraj s
+ *
+ * Data class for holding the value from server
+ *
+ * */
 data class Links( @SerializedName("self")
                   var self: String ="",
                   @SerializedName("html")

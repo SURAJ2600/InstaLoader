@@ -8,6 +8,12 @@ import com.suraj.instaloaderapp.rxHelper.AndroidDisposable
 import com.suraj.instaloaderapp.rxHelper.AppRxScheduler
 import com.suraj.instaloaderapp.viewstate.PinViewState
 
+
+
+/*
+*
+* Pinview model
+* */
 class PinViewModel(val repository: PinViewRepository,val appRxScheduler: AppRxScheduler,var androidDisposable: AndroidDisposable) :ViewModel(){
 
 

@@ -12,7 +12,13 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-
+/**
+ * @author  suraj s
+ *
+ * Provide required dependency for network things
+ *
+ *
+ * */
 private const val NETWORK_TIMEOUT = 30L
 
 var networkModule= module{

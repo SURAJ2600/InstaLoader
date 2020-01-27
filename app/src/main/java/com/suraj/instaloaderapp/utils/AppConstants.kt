@@ -2,6 +2,11 @@ package com.suraj.instaloaderapp.utils
 
 import com.suraj.instaloaderapp.BuildConfig
 
+
+/*
+*
+* Object for storing constant file
+* */
 object AppConstants
 {
     var PATH="raw/"

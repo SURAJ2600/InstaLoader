@@ -1,5 +1,12 @@
 package com.suraj.instaloaderapp.datastore.model
 
+/**
+ * @author Suraj s
+ *
+ * data class for holding app specific data ,Build in Builder pattern ,so we can pass only the item we want
+ *
+ * */
+
 class PinView(val id:String?,val name:String?,val likes:String?,var profileImage:String?){
 
     class  Builder{

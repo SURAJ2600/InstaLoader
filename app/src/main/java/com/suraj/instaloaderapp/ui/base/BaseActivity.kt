@@ -9,6 +9,14 @@ import androidx.lifecycle.ViewModel
 import com.suraj.instaloader.InstaLoader
 import com.suraj.instaloaderapp.R
 
+
+
+/*
+*
+* This is an base abstract class which defines the required implementation for our activity
+*
+* */
+
 abstract class BaseActivity <T: ViewDataBinding,V: ViewModel> : AppCompatActivity() {
     private var mViewDataBinding: T? = null
     private var mViewModel: V? = null

@@ -11,6 +11,14 @@ import com.suraj.instaloaderapp.ui.pinview.PinViewModel
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
+
+/**
+ * @author  suraj s
+ *
+ * Providing dependency of viewmodel,repository  and dependent modules
+ *
+ *
+ * */
 var PinViewModule= module {
 
     single { PinViewStateConverter() }

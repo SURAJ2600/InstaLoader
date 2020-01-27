@@ -2,6 +2,12 @@ package com.suraj.instaloaderapp.api.model
 
 import com.google.gson.annotations.SerializedName
 
+
+/**
+ * @author Suraj s
+ * Data class for holding the value from server
+*
+* */
 data class ApiResponse(
     @SerializedName("id")
     var id: String ="",
