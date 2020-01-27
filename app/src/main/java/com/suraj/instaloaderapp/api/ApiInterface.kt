@@ -9,5 +9,5 @@ import retrofit2.http.Path
 interface ApiInterface {
 
     @GET("raw/{id}")
-    fun getLoginDetails(@Path("id") user: String ) : Observable<List<ApiResponse>>
+    fun getPinViewFromApi(@Path("id") user: String ) : Observable<List<ApiResponse>>
 }

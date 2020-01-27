@@ -12,14 +12,14 @@ object FakeObjectProvider {
     var name = "name"
     var likes= "likes"
     var profile_image= "profile_image"
-    var profileImage= ProfileImage("link","link","link")
+    var profileImage= ProfileImage("small","medium","large")
     var user=User("","",name,profileImage)
 
     fun makeApiData():ApiResponse{
         return  ApiResponse(id, "", "","","",likes,"",user,null,null,null)
     }
 
-    fun makeUserViewData():PinView{
+    fun makePinViewData():PinView{
         return  PinView(id, name, likes, profile_image)
     }
 }

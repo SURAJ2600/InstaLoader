@@ -16,7 +16,7 @@ class ApiConverterTest  {
 
 
     @Test
-    fun `should convert api data coreetly to PinView`(){
+    fun `should convert api data correctly into PinView`(){
 
         var apiResponse = listOf(FakeObjectProvider.makeApiData())
         var data = converter.apply(apiResponse)
@@ -27,6 +27,8 @@ class ApiConverterTest  {
     private fun assertValues(data: List<PinView>, apiResponse: List<ApiResponse>) {
         Assert.assertEquals(data.size,apiResponse.size)
         Assert.assertEquals(data.get(0).name,apiResponse.get(0).user.name)
+        Assert.assertEquals(data.get(0).likes,apiResponse.get(0).likes)
+        Assert.assertEquals(data.get(0).profileImage,apiResponse.get(0).user.profile_image.large)
 
     }
 

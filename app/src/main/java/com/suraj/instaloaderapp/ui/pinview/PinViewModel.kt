@@ -26,4 +26,10 @@ class PinViewModel(val repository: PinViewRepository,val appRxScheduler: AppRxSc
 
     }
 
+
+    override fun onCleared() {
+        super.onCleared()
+        androidDisposable.dispose()
+    }
+
 }
