@@ -1,0 +1,110 @@
+ext{
+
+
+
+    versions = [
+            sourceCompatibility: JavaVersion.VERSION_1_8,
+            targetCompatibility: JavaVersion.VERSION_1_8,
+            androidSdk         : [
+                    compile    : 29,
+                    target     : 29,
+                    versionName: "1.0",
+                    versionCode: 1,
+                    min        : 19,
+                    buildTools : '29.0.2'
+            ],
+            kotlin             : '1.3.50',
+            androidX           : '1.1.0',
+            constraintLayout   : '1.1.3',
+            multiDex           : '2.0.0',
+            androidArch        :'1.1.1',
+            androidTest        : [
+                    robo       : '4.3'
+            ],
+            androidxTest       : [
+                    espresso   : '3.2.0',
+                    runner     : '1.2.0',
+                    rules      : '1.2.0',
+                    junit      : '1.1.1'
+            ],
+
+
+
+
+
+
+            retrofit           : '2.6.1',
+            retofitMock        : '2.5.0',
+            autoValue          : '1.4',
+            okHttp             : '3.12.0',
+            okHttpInter        : '4.1.0',
+            koin               : '2.0.1',
+
+    ]
+    gradlePlugins = [
+            androidBuild   : 'com.android.tools.build:gradle:3.5.3',
+            kotlin         : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
+            buildProperties: 'com.novoda:gradle-build-properties-plugin:0.4.1'
+    ]
+    libraries = [
+            app     : [
+
+
+                    koin                : "org.koin:koin-android:${versions.koin}",
+                    koinViewModel       : "org.koin:koin-android-viewmodel:${versions.koin}",
+                    kotlin              : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
+                    rxJava              : 'io.reactivex.rxjava2:rxjava:2.2.12',
+                    rxAndroid           : 'io.reactivex.rxjava2:rxandroid:2.1.1',
+                    rxKotlin            : 'io.reactivex.rxjava2:rxkotlin:2.2.0',
+                    retrofit            : [
+                            lib           : "com.squareup.retrofit2:retrofit:2.6.1",
+                            rxJavaAdapter : "com.squareup.retrofit2:adapter-rxjava2:2.5.0",
+                            gsonConverter: "com.squareup.retrofit2:converter-gson:2.6.1",
+                            mock:           "com.squareup.retrofit2:retrofit-mock:2.5.0"
+                    ],
+
+
+                    lifecycle           : [
+                            extensions     : "android.arch.lifecycle:extensions:1.1.1",
+                            runtime        : "android.arch.lifecycle:runtime:1.1.1",
+                            reactivestreams: "android.arch.lifecycle:reactivestreams:1.1.1",
+                            javaCommon     : "android.arch.lifecycle:common-java8:1.1.1"
+                    ],
+                    okHttp              : "com.squareup.okhttp3:okhttp:${versions.okHttp}",
+                    okHttpLogging       : "com.squareup.okhttp3:logging-interceptor:${versions.okHttp}",
+
+            ],     // Unit Test
+
+            test    : [
+                    junit          : 'junit:junit:4.12',
+                    mockito        : 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0',
+                    mockitoInline    : 'org.mockito:mockito-inline:2.28.2',
+                    coreTesting          :'androidx.arch.core:core-testing:2.1.0',
+                    androidjunit: 'androidx.test.ext:junit:1.1.1',
+                    robotoelectric           : "org.robolectric:robolectric:4.3"
+
+            ],
+
+            androidTeting: [
+                    core       : "androidx.test:core:1.2.0",
+                    runner    : "androidx.test:runner:1.2.0",
+                    rules      : "androidx.test:rules:1.2.0",
+                    junit      : "androidx.test.ext:junit:1.1.1",
+                    Esspresscore       : "androidx.test.espresso:espresso-core:3.2.0",
+                    EsspressIntent      : "androidx.test.espresso:espresso-intents:3.2.0",
+                    EspressoConta       :"androidx.test.espresso:espresso-contrib:3.2.0",
+                    roboelctric         :"org.robolectric:robolectric:4.3"
+            ],
+
+            support : [
+                    appcompat       : "androidx.appcompat:appcompat:${versions.androidX}",
+                    recyclerview    : "androidx.recyclerview:recyclerview:${versions.androidX}",
+                    v4              : "androidx.legacy:legacy-support-v4:${versions.androidX}",
+                    annotations     : "com.android.support:support-annotations:${versions.androidX}",
+                    design          : "com.google.android.material:material:1.0.0",
+                    multidex        : "androidx.multidex:multidex:${versions.multiDex}",
+                    constraintLayout: "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}",
+                    cardView         : "androidx.cardview:cardview:1.0.0"
+            ]
+    ]
+}
