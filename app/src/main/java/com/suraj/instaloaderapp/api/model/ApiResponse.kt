@@ -20,11 +20,11 @@ data class ApiResponse(
     @SerializedName("user")
     var user:User= User(),
     @SerializedName("urls")
-    var urls:URL = URL(),
+    var urls:URL? = URL(),
     @SerializedName("categories")
-    var categories:List<Categories> = listOf(),
+    var categories:List<Categories>? = listOf(),
     @SerializedName("links")
-    var links:Links)
+    var links:Links?)
 
 
 

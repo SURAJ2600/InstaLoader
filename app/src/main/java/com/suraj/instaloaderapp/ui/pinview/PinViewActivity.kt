@@ -11,9 +11,7 @@ import com.suraj.instaloaderapp.BR
 import com.suraj.instaloaderapp.R
 import com.suraj.instaloaderapp.databinding.ActivityPinViewBinding
 import com.suraj.instaloaderapp.ui.base.BaseActivity
-import com.suraj.instaloaderapp.utils.AppConstants
-import com.suraj.instaloaderapp.utils.isNetworkAvailable
-import com.suraj.instaloaderapp.utils.snackbarMessage
+import com.suraj.instaloaderapp.utils.*
 import com.suraj.instaloaderapp.viewstate.PinViewState
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -25,6 +23,9 @@ import org.koin.android.viewmodel.ext.android.viewModel
 *
 * */
 class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
+
+
+    var TAG =PinViewActivity::class.java.simpleName
 
 
     val pinviewModel: PinViewModel by viewModel()
@@ -71,7 +72,8 @@ class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
 
         InstaLoader.getInstance().source(AppConstants.JSON_URL)
             .loadJson().getJsonArrayResponse().observe(this, Observer {
-                Log.e("Respose",">>>>"+it)
+                LogsUtils.showLog(TAG,"$it",LOGTYPE.D)
+
             })
 
 
@@ -153,6 +155,7 @@ class PinViewActivity : BaseActivity<ActivityPinViewBinding, PinViewModel>() {
                         dataBinding.progress.visibility = View.GONE
                         setNoInternet(false)
                         setNoData(false)
+                        LogsUtils.showLog(TAG,"$it.list.size",LOGTYPE.D)
                         adapter.addNews(it.list.toMutableList() ?: mutableListOf())
 
                     }

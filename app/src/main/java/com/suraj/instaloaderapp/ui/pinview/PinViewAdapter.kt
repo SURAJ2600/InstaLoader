@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -12,7 +13,6 @@ import com.suraj.instaloader.InstaLoader
 import com.suraj.instaloaderapp.R
 import com.suraj.instaloaderapp.datastore.model.PinView
 import com.suraj.instaloaderapp.ui.fullview.FullImageViewActivity
-import com.suraj.instaloaderapp.utils.loadImage
 
 class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
 
@@ -67,13 +67,25 @@ class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
         private var parent = itemView
 
         fun bind(view: PinView) {
-
+            var mHeight=0
+            var mWidth=0
 
             /*
             *
             * Loading image with the use of @InstaLoader
             * */
+
+            val vto = imgPinView.viewTreeObserver
+            vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    imgPinView.viewTreeObserver.removeGlobalOnLayoutListener(this)
+                    mHeight = imgPinView.height // This will return actual height.
+                    mWidth = imgPinView.width // This will return actual width.
+                }
+            })
+
             InstaLoader.getInstance().source(view.profileImage!!)
+                .resize(mWidth,mHeight)
                 .into(imgPinView)
             txtName.text="${view.name}"
 
@@ -88,6 +100,7 @@ class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
 
 
         }
+
 
     }
 }

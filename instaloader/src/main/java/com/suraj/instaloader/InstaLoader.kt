@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.AnyRes
 import androidx.annotation.DrawableRes
@@ -26,6 +27,11 @@ import org.json.JSONArray
 import java.lang.ref.WeakReference
 import java.util.*
 import java.util.concurrent.Future
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.ViewTreeObserver
+
+
+
 
 
 /*Created by suraj on 24/02/2020
@@ -41,6 +47,8 @@ class InstaLoader : CachEvict {
         private var contextWeakReference: WeakReference<Context>? = null
         private lateinit var fastloader: InstaLoader
         lateinit var repository: InstaLoaderRepository
+        private val uiHandler = Handler(Looper.getMainLooper())
+
         var responseHandlerListener: (status: Boolean, data: Any?, message: String?) -> Unit =
             { status, data, message -> }
 
@@ -228,16 +236,19 @@ class InstaLoader : CachEvict {
                     .setUrl(it)
                     .setMethodType(MethodType.GET)
                     .setResponseType(ResponseType.IMAGE)
-                    .setScaleType(ImageView.ScaleType.FIT_XY)
-                    .setBitmapWidth(if (mWidth == 0) imageView.width else mWidth)
-                    .setBitmapHeight(if (mHeight == 0) imageView.height else mHeight)
+                    .setScaleType(imageView.scaleType)
+                    .setBitmapWidth(mWidth)
+                    .setBitmapHeight(mHeight)
                     .build()
                 try {
                     repository.loadImage(
                         requestBuilder,
                         responseHandlerListener = { status, bitmap, message ->
+
                             bitmap?.let {
-                                imageView.setImageBitmap(bitmap as Bitmap)
+                                uiHandler.post {
+                                    imageView.setImageBitmap(bitmap as Bitmap)
+                                }
                             } ?: kotlin.run {
                                 setDefaultIcons(imageView)
                             }
@@ -263,10 +274,12 @@ class InstaLoader : CachEvict {
     *
     * */
     private fun setDefaultIcons(view: ImageView) {
-        if (PlaceHolder.placeHolderBitmap != null) { // Placeholder is bitmap
-            view.setImageBitmap(PlaceHolder.placeHolderBitmap)
-        } else if (PlaceHolder.placeHolderColor != -1) { // Placeholder is color
-            view.setImageResource(PlaceHolder.placeHolderColor)
+        uiHandler.post {
+            if (PlaceHolder.placeHolderBitmap != null) { // Placeholder is bitmap
+                view.setImageBitmap(PlaceHolder.placeHolderBitmap)
+            } else if (PlaceHolder.placeHolderColor != -1) { // Placeholder is color
+                view.setImageResource(PlaceHolder.placeHolderColor)
+            }
         }
     }
 

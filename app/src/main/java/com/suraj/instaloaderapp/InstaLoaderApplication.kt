@@ -28,7 +28,6 @@ class InstaLoaderApplication :Application(), LifecycleObserver {
         startKoin {
             androidContext(this@InstaLoaderApplication)
             modules(AppModule)
-
         }
         ProcessLifecycleOwner.get()
             .lifecycle.addObserver(this) // to observe Application lifecycle events

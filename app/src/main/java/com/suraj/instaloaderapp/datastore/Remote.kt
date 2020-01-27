@@ -8,6 +8,6 @@ import io.reactivex.Observable
 class Remote(var apiInterface: ApiInterface,var apiConverter: ApiConverter) :ApiHelper{
     override fun getPinViewData(id:String): Observable<List<PinView>> {
        return apiInterface.getLoginDetails(id)
-            .map{apiConverter.apply(it)}
+            .map(apiConverter)
     }
 }
