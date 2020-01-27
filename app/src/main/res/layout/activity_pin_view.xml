@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    >
+    tools:context=".ui.MainActivity">
 
     <data>
         <import type="android.view.View" />
@@ -18,11 +18,18 @@
     android:layout_height="match_parent"
     android:background="@color/black_color"
    >
-
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="@dimen/margin_0"
+        android:layout_height="@dimen/margin_0" app:layout_constraintBottom_toTopOf="@+id/guideLineBottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideLineRight"
+        app:layout_constraintStart_toStartOf="@+id/guideLineLeft"
+        app:layout_constraintTop_toTopOf="@+id/guideLineTop" >
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_pins"
         android:layout_width="@dimen/margin_0"
         android:layout_height="@dimen/margin_0"
+        android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
         app:spanCount="2"
         tools:listitem="@layout/list_cell_pinview"
@@ -30,6 +37,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideLineRight"
         app:layout_constraintStart_toStartOf="@+id/guideLineLeft"
         app:layout_constraintTop_toTopOf="@+id/guideLineTop" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <ProgressBar
         android:id="@+id/progress"
         android:layout_width="@dimen/progress"
@@ -39,6 +47,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgNoData"
+        android:layout_width="@dimen/margin_150"
+        android:layout_height="@dimen/margin_150"
+        android:src="@drawable/ic_no_data"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:tint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+        android:id="@+id/imgOffline"
+        android:layout_width="@dimen/margin_150"
+        android:layout_height="@dimen/margin_150"
+        android:visibility="gone"
+        android:src="@drawable/ic_no_wifi"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:tint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
         <!--View algin helpers-->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideLineTop"

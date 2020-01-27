@@ -15,9 +15,9 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun isNetworkAvailable(): Boolean {
+fun isNetworkAvailable(context: Context): Boolean {
     val connectivityManager =
-        InstaLoaderApplication.applicationContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+       context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork = connectivityManager.activeNetworkInfo
     return activeNetwork != null && activeNetwork.isConnectedOrConnecting
 }

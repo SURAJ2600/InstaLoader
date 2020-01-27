@@ -37,7 +37,7 @@ class PinViewRepository(var remoteHelper:Remote,var pinViewConverter: PinViewSta
                 is UnknownHostException -> PinViewState.Error("NO INTERNET")
                 is retrofit2.adapter.rxjava2.HttpException ->  PinViewState.Error("UNKNOWN")
                 is HttpException ->  PinViewState.Error("Please use a valid URL")
-                else -> PinViewState.Error("UNKNOWN")
+                else -> PinViewState.Error("NO DATA")
             }
         }
     }

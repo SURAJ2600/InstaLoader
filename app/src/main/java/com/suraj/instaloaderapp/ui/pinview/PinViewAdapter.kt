@@ -45,7 +45,13 @@ class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
     override fun onBindViewHolder(holder: PinViewHolder, position: Int) {
         holder.bind(pinViewList[position])
 
+
+        /*
+        * Cancel the image loader request
+        *
+        * */
         if(position==0){
+
             InstaLoader.getInstance().cancelSingleRequest(pinViewList[position].profileImage ?: "")
         }
     }
@@ -61,7 +67,12 @@ class PinViewAdapter : RecyclerView.Adapter<PinViewAdapter.PinViewHolder>() {
         private var parent = itemView
 
         fun bind(view: PinView) {
-            Log.e("URLS",">>>>>>>>>>>>"+view.profileImage)
+
+
+            /*
+            *
+            * Loading image with the use of @InstaLoader
+            * */
             InstaLoader.getInstance().source(view.profileImage!!)
                 .into(imgPinView)
             txtName.text="${view.name}"

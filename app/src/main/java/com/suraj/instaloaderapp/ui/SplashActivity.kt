@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import com.suraj.instaloaderapp.MainActivity
 import com.suraj.instaloaderapp.R
 import com.suraj.instaloaderapp.ui.pinview.PinViewActivity
 

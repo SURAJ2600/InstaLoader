@@ -2,26 +2,61 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     >
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
+    android:background="@color/black_color"
     android:layout_height="match_parent"
     tools:context=".ui.fullview.FullImageViewActivity">
 
 
 
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2"/>
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineBottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.80"/>
+
     <ImageView
         android:id="@+id/imgFull"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/black_color"
         android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-   
+        app:layout_constraintTop_toTopOf="@+id/guidelineStart" />
+
+    <LinearLayout
+        android:id="@+id/ll_back"
+        android:layout_width="@dimen/margin_32"
+        android:layout_height="@dimen/margin_32"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:background="@drawable/ripple_drawable_circle"
+        app:layout_constraintBottom_toTopOf="@+id/imgFull"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.16000003">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="@dimen/margin_4"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_back"
+            android:tint="@color/white" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

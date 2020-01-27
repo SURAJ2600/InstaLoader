@@ -6,21 +6,19 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="4dp"
-    android:layout_margin="4dp">
+    app:cardCornerRadius="@dimen/margin_4"
+    android:layout_margin="@dimen/margin_4">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/parentContsraint"
         android:layout_width="match_parent"
         android:clickable="true"
-
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/imgPinView"
             android:layout_width="0dp"
             android:clickable="true"
-
             android:layout_height="0dp"
             android:scaleType="fitXY"
             android:foreground="?android:attr/selectableItemBackground"
@@ -37,10 +35,10 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="4dp"
             android:fontFamily="@font/roboto_slab_bold"
-            android:padding="10dp"
+            android:padding="@dimen/margin_12"
             android:text=""
             android:textColor="@color/black_color"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_14"
             app:layout_constrainedHeight="true"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,21 +51,21 @@
             android:id="@+id/fl_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_drawable_circle"
+            android:layout_margin="@dimen/margin_4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txtName">
 
         <ImageView
             android:id="@+id/imgMore"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_margin="@dimen/margin_4"
-            android:fontFamily="@font/roboto_slab_bold"
+            android:layout_width="@dimen/margin_24"
             android:padding="@dimen/margin_4"
+            android:layout_height="@dimen/margin_24"
+            android:fontFamily="@font/roboto_slab_bold"
             android:src="@drawable/ic_more"
             android:background="@drawable/oval_bg"
-            android:clickable="true"
-            android:foreground="?android:attr/selectableItemBackground"
             android:textColor="@color/black_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/txtName" />

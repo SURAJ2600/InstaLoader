@@ -29,5 +29,9 @@ class FullImageViewActivity : AppCompatActivity() {
 
         InstaLoader.getInstance().source(url)
             .into(imgFull)
+
+        ll_back.setOnClickListener {
+            finish()
+        }
     }
 }

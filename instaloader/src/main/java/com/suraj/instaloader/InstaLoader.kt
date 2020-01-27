@@ -336,8 +336,9 @@ class InstaLoader : CachEvict {
     * Evict all bitmap from memory cache
     * */
 
-    override fun evictAllBitmap() {
+    override fun evictAllBitmap()  {
         repository.evictAllBitmap()
+
     }
 
 
@@ -367,6 +368,20 @@ class InstaLoader : CachEvict {
         repository.cancelAllRequest()
 
     }
+
+
+    /*
+    * Shutdown all task
+    *
+    * */
+    fun shutDown(){
+        evictAllBitmap()
+        evictAllJson()
+        cancelAllTask()
+
+    }
+
+
 
 
 }
