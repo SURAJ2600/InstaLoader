@@ -9,6 +9,9 @@ jobs:
 
     steps:
       - checkout
+      - run:
+            name: Install licenses
+            command: cp licenses/* /opt/android/sdk/licenses/
       - run: yes | sdkmanager --licenses
       - run: yes | sdkmanager --update || exit 0
       - restore_cache:
