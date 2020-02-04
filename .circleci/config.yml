@@ -3,12 +3,14 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-24-alpha
+      - image: circleci/android:android:api-28
     environment:
       JVM_OPTS: -Xmx3200m
 
     steps:
       - checkout
+      - run: yes | sdkmanager --licenses
+      - run: yes | sdkmanager --update || exit 0
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
