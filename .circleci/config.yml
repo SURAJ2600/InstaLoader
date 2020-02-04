@@ -13,7 +13,7 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
           name: Dowload sdk manager
-          command: secho y | $ANDROID_HOME/tools/android update sdk --all --filter build-tools-21.1.0 --no-ui
+          command: secho y | $ANDROID_HOME/tools/android update sdk --all --filter build-tools-29.0.2 --no-ui
       - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
