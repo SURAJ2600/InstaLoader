@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/code
     docker:
-      - image: circleci/android:api-25-alpha
+      - image: circleci/android:api-24-alpha
     environment:
       JVM_OPTS: -Xmx3200m
 
@@ -14,9 +14,7 @@ jobs:
       - run:
           name: Chmod permissions #if permission for Gradlew Dependencies fail, use this.
           command: sudo chmod +x ./gradlew
-      - run:
-          name : Dowload sdk manager
-          command: sdkmanager --update && yes | sdkmanager --licenses
+    
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
